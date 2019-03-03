@@ -1,6 +1,7 @@
 
 #include "pch.h"
 #include <iostream>
+#include "ListaSimple.h"
 
 /*
 	Tarea Corta #2

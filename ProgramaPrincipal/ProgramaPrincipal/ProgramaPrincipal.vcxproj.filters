@@ -18,7 +18,7 @@
     <ClInclude Include="pch.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Clase2.h">
+    <ClInclude Include="ListaSimple.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClCompile Include="ProgramaPrincipal.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Clase2.cpp">
+    <ClCompile Include="ListaSimple.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
