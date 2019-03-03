@@ -66,17 +66,20 @@ inline void ListaB<T, N>::push_back(T x)
 template<class T, int N>
 inline void ListaB<T, N>::insertar(T x, int pos)
 {
+	//En pareja
 }
 
 template<class T, int N>
 inline bool ListaB<T, N>::remove(int pos, T & x)
 {
+	//En pareja
 	return false;
 }
 
 template<class T, int N>
 inline bool ListaB<T, N>::pop(T & x)
 {
+	//En pareja
 	return false;
 }
 

@@ -20,19 +20,19 @@ private:
 	link primero; // Puntero al primer elemento de la lista
 	int tam; // Cantidad de elementos de la lista
 	string nombreLista; // Nombre de la lista
-
+	int x; //almacenamiento del numero X. Metodo pop(T &x);
+	string imprimaDeInstanciacion();
 
 public:
 	Lista(string nombre);
 	int len();
 	void push_front(T x);
-	void push_front(T x);
 	void push_back(T x);
 	void insertar(T x, int pos);
 	bool remove(int pos, T& x);
-	bool pop(T& x);
+	bool pop(T x);
 	bool pop_back(T& x);
-	bool get(int pos, T& x);
+	bool set(int pos, T x);
 	bool get_front(T& x);
 	bool get_back(T& x);
 	void print();
@@ -40,14 +40,23 @@ public:
 };
 
 template<class T>
+inline string Lista<T>::imprimaDeInstanciacion()
+{
+	return nombreLista;
+}
+
+template<class T>
 inline Lista<T>::Lista(string nombre)
 {
+	nombreLista = nombre;
+	primero = NULL;
+	tam = 0;
 }
 
 template<class T>
 inline int Lista<T>::len()
 {
-	return 0;
+	return tam;
 }
 
 template<class T>
@@ -58,11 +67,38 @@ inline void Lista<T>::push_front(T x)
 template<class T>
 inline void Lista<T>::push_back(T x)
 {
+	if (!primero) {
+		primero = new Nodo(x);
+	}
+	else {
+		link q = primero;
+		for (; q->siguiente; q = q->siguiente);
+		q->siguiente = new Nodo(x, q->siguiente);
+	}
+	tam++;
 }
 
 template<class T>
 inline void Lista<T>::insertar(T x, int pos)
 {
+	if (!primero) {
+		primero = new Nodo(x);
+	}
+	else {
+		if (pos == 0) {
+			primero = new Nodo(x, primero);
+		}
+		else {
+			link p = primero;
+			while (p->siguiente && pos > 1) {
+				p = p->siguiente;
+				pos--;
+			}
+			p->siguiente = new Nodo(x, p->siguiente);
+		}
+	}
+	tam++;
+
 }
 
 template<class T>
@@ -72,9 +108,23 @@ inline bool Lista<T>::remove(int pos, T & x)
 }
 
 template<class T>
-inline bool Lista<T>::pop(T & x)
-{
-	return false;
+inline bool Lista<T>::pop(T  x)
+{	
+	if (!primero) {
+		return false;
+	}
+	else {
+		tam--;
+		int y = primero->elemento;
+		primero = primero->siguiente;
+		link q = primero;
+		while ((q) && (x > 0)){
+			q = q->siguiente;
+			x-=1;
+		}
+		q->elemento = y;
+		return true;
+	}
 }
 
 template<class T>
@@ -84,9 +134,19 @@ inline bool Lista<T>::pop_back(T & x)
 }
 
 template<class T>
-inline bool Lista<T>::get(int pos, T & x)
+inline bool Lista<T>::set(int pos, T  x)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else {
+		link q = primero;
+		while (q && pos > 0) {
+			q = q->siguiente;
+			pos--;
+		}
+		q->elemento = x;
+	}
 }
 
 template<class T>
@@ -104,6 +164,13 @@ inline bool Lista<T>::get_back(T & x)
 template<class T>
 inline void Lista<T>::print()
 {
+	cout << "[ ";
+	if (primero) {
+		link q = primero;
+		cout << q->elemento;
+		for (q = q->siguiente; q;q=q->siguiente) cout << ", " << q->elemento;
+	}
+	cout << " ]";
 }
 
 template<class T>
