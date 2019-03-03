@@ -15,14 +15,16 @@ private:
 			lleno{ false } {}
 		Nodo(T x, struct Nodo* sig)
 			:elemento{ x }, siguiente{ sig },
-			lleno{ false } {}
+			lleno{ false } {}
+
 	};
 	typedef struct Nodo * link;
 	link primero; // Puntero al primer elemento de la lista
 	int tam; // Cantidad de elementos de la lista
 	string nombreLista; // Nombre de la lista
 	// Métodos privados
-	// Acá se incluyen los métodos privados que se requieran.
+	// Acá se incluyen los métodos privados que se requieran.
+
 public:
 	ListaB(string nombre);
 	int len();
@@ -36,7 +38,8 @@ public:
 	bool get_front(T& element);
 	bool get_back(T& element);
 	void print();
-	~ListaB();
+	~ListaB();
+
 };
 
 template<class T, int N>

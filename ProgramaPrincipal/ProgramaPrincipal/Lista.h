@@ -21,6 +21,7 @@ private:
 	int tam; // Cantidad de elementos de la lista
 	string nombreLista; // Nombre de la lista
 
+
 public:
 	Lista(string nombre);
 	int len();
