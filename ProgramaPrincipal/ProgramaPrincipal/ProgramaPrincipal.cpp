@@ -99,7 +99,8 @@ void encabezado(){
 				lista.insertar(i, 0);
 			}
 			lista.print();
-			lista.pop(4);
+			int x;
+			lista.pop(x);
 			cout << "\n\t";
 			lista.print();
 			(lista.len() != largo)? resultado = true : resultado = false;

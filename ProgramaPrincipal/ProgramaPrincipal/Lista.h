@@ -30,7 +30,7 @@ public:
 	void push_back(T x);
 	void insertar(T x, int pos);
 	bool remove(int pos, T& x);
-	bool pop(T x);
+	bool pop(T& x);
 	bool pop_back(T& x);
 	bool set(int pos, T x);
 	bool get_front(T& x);
@@ -62,6 +62,14 @@ inline int Lista<T>::len()
 template<class T>
 inline void Lista<T>::push_front(T x)
 {
+	if (!primero) {
+		primero = new Nodo(x);
+	}
+	else {
+		link q = new Nodo(x,primero);
+		primero = q;
+	}
+	tam++;
 }
 
 template<class T>
@@ -108,21 +116,15 @@ inline bool Lista<T>::remove(int pos, T & x)
 }
 
 template<class T>
-inline bool Lista<T>::pop(T  x)
+inline bool Lista<T>::pop(T& x)
 {	
 	if (!primero) {
 		return false;
 	}
 	else {
 		tam--;
-		int y = primero->elemento;
+		x = primero->elemento;
 		primero = primero->siguiente;
-		link q = primero;
-		while ((q) && (x > 0)){
-			q = q->siguiente;
-			x-=1;
-		}
-		q->elemento = y;
 		return true;
 	}
 }
@@ -130,7 +132,25 @@ inline bool Lista<T>::pop(T  x)
 template<class T>
 inline bool Lista<T>::pop_back(T & x)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else if (!primero->siguiente) {
+		x = primero;
+		primero = primero->siguiente;
+		tam--;
+		return true;
+	}
+	else {
+		tam--;
+		link q = primero;
+		while (q->siguiente->siguiente) {
+			q = q->siguiente;
+		}
+		x = q->siguiente->elemento;
+		q->siguiente = NULL;
+		return true;
+	}
 }
 
 template<class T>
@@ -176,4 +196,10 @@ inline void Lista<T>::print()
 template<class T>
 inline Lista<T>::~Lista()
 {
+	link p;
+	while (primero) {
+		p = primero->siguiente;
+		delete primero;
+		primero = p;
+	}
 }
