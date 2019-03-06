@@ -45,12 +45,16 @@ public:
 template<class T, int N>
 inline ListaB<T, N>::ListaB(string nombre)
 {
+	tam = 0;
+	lleno = false;
+	nombreLista = nombre;
+	primero = NULL;
 }
 
 template<class T, int N>
 inline int ListaB<T, N>::len()
 {
-	return 0;
+	return tam;
 }
 
 template<class T, int N>
@@ -115,4 +119,10 @@ inline void ListaB<T, N>::print()
 template<class T, int N>
 inline ListaB<T, N>::~ListaB()
 {
+	link p;
+	while (primero) {
+		p = primero->siguiente;
+		delete primero;
+		primero = p;
+	}
 }
