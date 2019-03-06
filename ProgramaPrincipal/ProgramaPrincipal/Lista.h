@@ -112,7 +112,23 @@ inline void Lista<T>::insertar(T x, int pos)
 template<class T>
 inline bool Lista<T>::remove(int pos, T & x)
 {
-	return false;
+	if (pos >= primero.len() ) {
+		return false;
+	}
+	else
+	{
+		link q = primero;
+		pos--;
+		while (pos!=0) {
+			pos--;
+			q = q->siguiente;
+
+		}
+		x = q->siguiente->elemento;
+		q->siguiente = q->siguiente->siguiente;
+		return true;
+	}
+
 }
 
 template<class T>
@@ -136,7 +152,7 @@ inline bool Lista<T>::pop_back(T & x)
 		return false;
 	}
 	else if (!primero->siguiente) {
-		x = primero;
+		x = primero->elemento;
 		primero = primero->siguiente;
 		tam--;
 		return true;
@@ -172,13 +188,33 @@ inline bool Lista<T>::set(int pos, T  x)
 template<class T>
 inline bool Lista<T>::get_front(T & x)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else {
+		x = primero->elemento;
+		return true;
+	}
 }
 
 template<class T>
 inline bool Lista<T>::get_back(T & x)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else if (!primero->siguiente) {
+		x = primero->elemento;
+		return true;
+	}
+	else {
+		link q = primero;
+		while (q->siguiente->siguiente) {
+			q = q->siguiente;
+		}
+		x = q->siguiente->elemento;
+		return true;
+	}
 }
 
 template<class T>
