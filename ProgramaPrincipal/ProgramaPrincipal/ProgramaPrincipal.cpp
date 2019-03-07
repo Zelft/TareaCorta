@@ -2,6 +2,7 @@
 #include "pch.h"
 #include <iostream>
 #include "Lista.h"
+#include "ListaB.h"
 
 using namespace std;
 
@@ -154,5 +155,7 @@ void encabezado(){
 
 		}//Switch
 	}
+
+	system("PAUSE()");
 }
 

@@ -7,18 +7,15 @@ using namespace std;
 template <class T, int N = 20>
 class ListaB {
 private:
-	struct Nodo {
+	struct Node {
 		bool lleno;
 		T elemento[N];
-		struct Nodo * siguiente;
-		Nodo(T x) :elemento{ x }, siguiente{ 0 },
-			lleno{ false } {}
-		Nodo(T x, struct Nodo* sig)
-			:elemento{ x }, siguiente{ sig },
-			lleno{ false } {}
-
+		struct Node * siguiente; // Puntero al siguiente nodo
+		// Constructores
+		Node() :lleno{ false }, siguiente{ 0 } {}
+		Node(struct Node * sig) :lleno{ false }, siguiente{ sig } {}
 	};
-	typedef struct Nodo * link;
+	typedef struct Node * link;
 	link primero; // Puntero al primer elemento de la lista
 	int tam; // Cantidad de elementos de la lista
 	string nombreLista; // Nombre de la lista
@@ -46,7 +43,6 @@ template<class T, int N>
 inline ListaB<T, N>::ListaB(string nombre)
 {
 	tam = 0;
-	lleno = false;
 	nombreLista = nombre;
 	primero = NULL;
 }
@@ -102,13 +98,33 @@ inline bool ListaB<T, N>::get(int pos, T & element)
 template<class T, int N>
 inline bool ListaB<T, N>::get_front(T & element)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else
+	{
+		element = primero->elemento[0];
+		return true;
+	}
+
 }
 
 template<class T, int N>
 inline bool ListaB<T, N>::get_back(T & element)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else
+	{
+		link q = primero;
+		while (q->siguiente)
+		{
+			q = q->siguiente;
+		}
+		element = q->elemento[N-1];
+		return true;
+	}
 }
 
 template<class T, int N>
