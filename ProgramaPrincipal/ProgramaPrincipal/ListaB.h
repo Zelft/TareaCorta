@@ -1,21 +1,24 @@
 #pragma once
 #include "string"
 #include <stdio.h>
+#include "Lista.h"
+#include <queue>
 
 using namespace std;
 
 template <class T, int N = 20>
 class ListaB {
 private:
-	struct Node {
+	struct Nodo {
 		bool lleno;
 		T elemento[N];
-		struct Node * siguiente; // Puntero al siguiente nodo
+		struct Nodo * siguiente; // Puntero al siguiente nodo
 		// Constructores
-		Node() :lleno{ false }, siguiente{ 0 } {}
-		Node(struct Node * sig) :lleno{ false }, siguiente{ sig } {}
+		Nodo() :lleno{ false }, siguiente{ 0 } {}
+		Nodo(struct Nodo * sig) :lleno{ false }, siguiente{ sig } {}
 	};
-	typedef struct Node * link;
+	typedef struct Nodo* link;
+
 	link primero; // Puntero al primer elemento de la lista
 	int tam; // Cantidad de elementos de la lista
 	string nombreLista; // Nombre de la lista
@@ -39,6 +42,7 @@ public:
 
 };
 
+
 template<class T, int N>
 inline ListaB<T, N>::ListaB(string nombre)
 {
@@ -61,6 +65,41 @@ inline void ListaB<T, N>::push_front(T x)
 template<class T, int N>
 inline void ListaB<T, N>::push_back(T x)
 {
+	if (!primero) {
+		primero = new Nodo();
+		primero->elemento[0] = x;
+		tam++;
+	}
+	else {
+		if (tam >= N) {
+			int mod = tam / N;
+			int pos = tam % N;
+			link p = primero;
+			while (mod > 1 && p->siguiente) {
+				p = p->siguiente;
+				mod--;
+			}
+			if (pos != 0 && p->siguiente) {
+				p = p->siguiente;
+				p->elemento[pos] = x;
+			}
+			else {
+				if (pos != 0) {
+					p->elemento[pos] = x;
+				}
+				else {
+					p->siguiente = new Nodo();
+					p = p->siguiente;
+					p->elemento[0] = x;
+				}
+			}
+		}
+		else
+		{
+			primero->elemento[tam] = x;
+		}
+		tam++;
+	}
 }
 
 template<class T, int N>
@@ -92,7 +131,20 @@ inline bool ListaB<T, N>::pop_back(T & x)
 template<class T, int N>
 inline bool ListaB<T, N>::get(int pos, T & element)
 {
-	return false;
+	if (!primero && pos>tam) {
+		return false;
+	}
+	else
+	{
+		pos--;
+		link p = primero;
+		while (pos>=N) {
+			p = p->siguiente;
+			pos -= N;
+		}
+		element = p->elemento[pos];
+		return true;
+	}
 }
 
 template<class T, int N>
@@ -117,12 +169,14 @@ inline bool ListaB<T, N>::get_back(T & element)
 	}
 	else
 	{
+		int pos = tam;
 		link q = primero;
 		while (q->siguiente)
 		{
 			q = q->siguiente;
+			pos -= N;
 		}
-		element = q->elemento[N-1];
+		element = q->elemento[pos-1];
 		return true;
 	}
 }

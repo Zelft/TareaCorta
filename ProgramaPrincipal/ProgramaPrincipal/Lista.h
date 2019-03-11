@@ -32,7 +32,7 @@ public:
 	bool remove(int pos, T& x);
 	bool pop(T& x);
 	bool pop_back(T& x);
-	bool set(int pos, T x);
+	bool get(int pos, T& x);
 	bool get_front(T& x);
 	bool get_back(T& x);
 	void print();
@@ -170,7 +170,7 @@ inline bool Lista<T>::pop_back(T & x)
 }
 
 template<class T>
-inline bool Lista<T>::set(int pos, T  x)
+inline bool Lista<T>::get(int pos, T& x)
 {
 	if (!primero) {
 		return false;
@@ -181,7 +181,8 @@ inline bool Lista<T>::set(int pos, T  x)
 			q = q->siguiente;
 			pos--;
 		}
-		q->elemento = x;
+		x = q->elemento;
+		return true;
 	}
 }
 

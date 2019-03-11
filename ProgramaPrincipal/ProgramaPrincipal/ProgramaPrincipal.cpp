@@ -16,8 +16,32 @@ void reportePrueba(bool);
 
 int main()
 {
-	encabezado();
-
+	ListaB<int, 5> pruebalista{"pruebaB"};
+	pruebalista.push_back(1);
+	pruebalista.push_back(2);
+	pruebalista.push_back(3);
+	pruebalista.push_back(4);
+	pruebalista.push_back(5);
+	pruebalista.push_back(6);
+	pruebalista.push_back(7);
+	pruebalista.push_back(8);
+	pruebalista.push_back(9);
+	pruebalista.push_back(10);
+	pruebalista.print();
+	pruebalista.push_front(0);
+	pruebalista.print();
+	pruebalista.push_front(100);
+	pruebalista.print();
+	pruebalista.push_front(101);
+	pruebalista.print();
+	pruebalista.push_front(102);
+	pruebalista.print();
+	//int x;
+	//pruebalista.get_back(x);
+	//cout << x;
+	//pruebalista.push_back(1);
+	//encabezado();
+	system("Pause()");
 }
 
 void reportePrueba(bool b) {
@@ -121,7 +145,7 @@ void encabezado(){
 			}
 			cout << "\n\t";
 			lista.print();
-			lista.set(3, 49);
+			//lista.set(3, 49);
 			cout << "\n\t";
 			lista.print();
 			(lista.len() == largo) ? resultado = true : resultado = false;
