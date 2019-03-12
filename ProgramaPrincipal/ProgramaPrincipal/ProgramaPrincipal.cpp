@@ -16,8 +16,13 @@ void reportePrueba(bool);
 
 int main()
 {
-	ListaB<int, 5> pruebalista{"pruebaB"};
-	pruebalista.push_back(1);
+	ListaB<int, 5> lista{"pruebaB"};
+	lista.push_back(1);
+	lista.push_back(2);
+	lista.push_back(3);
+	lista.push_back(4);
+	lista.push_back(5);
+	/*pruebalista.push_back(1);
 	pruebalista.push_back(2);
 	pruebalista.push_back(3);
 	pruebalista.push_back(4);
@@ -35,7 +40,7 @@ int main()
 	pruebalista.push_front(101);
 	pruebalista.print();
 	pruebalista.push_front(102);
-	pruebalista.print();
+	pruebalista.print();*/
 	//int x;
 	//pruebalista.get_back(x);
 	//cout << x;

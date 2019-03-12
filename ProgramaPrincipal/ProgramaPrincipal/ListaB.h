@@ -60,6 +60,25 @@ inline int ListaB<T, N>::len()
 template<class T, int N>
 inline void ListaB<T, N>::push_front(T x)
 {
+	std::queue<T> ListaElementos;
+	ListaElementos.push(x);
+	for (int i = 1; i <= tam; i++) {
+		T a;
+		this->get(i, a);
+		ListaElementos.push(a);
+	}
+	tam = 0;
+	link p = primero;
+	while (p) {
+		link siguiente = p->siguiente;
+		delete p;
+		p = siguiente;
+	}
+	primero = NULL;
+	while (!ListaElementos.empty()) {
+		this->push_back(ListaElementos.front());
+		ListaElementos.pop();
+	}
 }
 
 template<class T, int N>
@@ -184,6 +203,39 @@ inline bool ListaB<T, N>::get_back(T & element)
 template<class T, int N>
 inline void ListaB<T, N>::print()
 {
+	cout << "[";
+	if (primero) {
+		link p = primero;
+		int nodos = tam / N;
+		int posFinal = tam % N;
+		while (nodos > 0) {
+			cout << "[";
+			for (int i = 0; i < N - 1; i++) {
+				cout << p->elemento[i] << ",";
+			}
+			if (p->siguiente)
+				cout << p->elemento[N - 1] << "],";
+			else
+				cout << p->elemento[N - 1] << "]";
+			p = p->siguiente;
+			nodos--;
+		}
+
+		if (posFinal != 0) {
+			cout << "[";
+			for (int i = 0; i < posFinal - 1; i++) {
+				cout << p->elemento[i] << ",";
+			}
+			cout << p->elemento[posFinal - 1] << "]";
+		}
+		/*else {
+			for (int i = 0; i < N - 1; i++) {
+				cout << p->elemento[i] << ",";
+			}
+			cout << p->elemento[N-1] << "]";
+		}*/
+	}
+	cout << "]\n";
 }
 
 template<class T, int N>
