@@ -124,7 +124,40 @@ inline void ListaB<T, N>::push_back(T x)
 template<class T, int N>
 inline void ListaB<T, N>::insertar(T x, int pos)
 {
-	//En parejas
+	if (!primero || pos > tam) {
+		cout << "No se puede insertar. La posicion esta fuera de rango";
+	}
+	else {
+		link p = primero;
+		queue<T> elementos;
+		int t = tam;
+		int c = 0;
+		T a;
+		while (t) {
+			if (c != pos) {
+				this->pop(a);
+				elementos.push(a);
+			}
+			else {
+				elementos.push(x);
+				t++;
+			}
+			c++;
+			t--;
+		}
+		tam = 0;
+		p = primero;
+		while (p) {
+			link siguiente = p->siguiente;
+			delete p;
+			p = siguiente;
+		}
+		primero = NULL;
+		while (!elementos.empty()) {
+			this->push_back(elementos.front());
+			elementos.pop();
+		}
+	}
 }
 
 template<class T, int N>
