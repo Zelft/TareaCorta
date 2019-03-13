@@ -124,27 +124,107 @@ inline void ListaB<T, N>::push_back(T x)
 template<class T, int N>
 inline void ListaB<T, N>::insertar(T x, int pos)
 {
-	//En pareja
+	//En parejas
 }
 
 template<class T, int N>
 inline bool ListaB<T, N>::remove(int pos, T & x)
 {
-	//En pareja
-	return false;
+	if (!primero || pos > tam) {
+		return false;
+	}
+	else {
+		link p = primero;
+		queue<T> elementos;
+		int t = tam;
+		int c = 0;
+		T a;
+		while (t) {
+			if (c != pos) {
+				this->pop(a);
+				elementos.push(a);
+			}
+			else {
+				this->pop(x);
+			}
+			c++;
+			t--;
+		}
+		tam = 0;
+		p = primero;
+		while (p) {
+			link siguiente = p->siguiente;
+			delete p;
+			p = siguiente;
+		}
+		primero = NULL;
+		while (!elementos.empty()) {
+			this->push_back(elementos.front());
+			elementos.pop();
+		}
+		return true;
+	}
 }
+
 
 template<class T, int N>
 inline bool ListaB<T, N>::pop(T & x)
 {
-	//En pareja
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else {
+		x = primero->elemento[0];
+		queue<int> elementos;
+		for (int i = 2; i <= tam; i++) {
+			T a;
+			this->get(i, a);
+			elementos.push(a);
+		}
+		tam = 0;
+		link p = primero;
+		while (p) {
+			link siguiente = p->siguiente;
+			delete p;
+			p = siguiente;
+		}
+		primero = NULL;
+		while (!elementos.empty()) {
+			this->push_back(elementos.front());
+			elementos.pop();
+		}
+		return true;
+	}
 }
 
 template<class T, int N>
-inline bool ListaB<T, N>::pop_back(T & x)
+inline bool ListaB<T, N>::pop_back(T & elemento)
 {
-	return false;
+	if (!primero) {
+		return false;
+	}
+	else {
+		queue<T>elementos;
+		for (int i = 1; i < tam; i++) {
+			T a;
+			this->get(i, a);
+			elementos.push(a);
+		}
+		this->get(tam, elemento);
+		tam = 0;
+		link p = primero;
+		while (p) {
+			link siguiente = p->siguiente;
+			delete p;
+			p = siguiente;
+		}
+		primero = NULL;
+		while (!elementos.empty()) {
+			this->push_back(elementos.front());
+			elementos.pop();
+		}
+		return true;
+	}
 }
 
 template<class T, int N>
@@ -228,12 +308,6 @@ inline void ListaB<T, N>::print()
 			}
 			cout << p->elemento[posFinal - 1] << "]";
 		}
-		/*else {
-			for (int i = 0; i < N - 1; i++) {
-				cout << p->elemento[i] << ",";
-			}
-			cout << p->elemento[N-1] << "]";
-		}*/
 	}
 	cout << "]\n";
 }

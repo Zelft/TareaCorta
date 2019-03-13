@@ -16,31 +16,21 @@ void reportePrueba(bool);
 
 int main()
 {
-	ListaB<int, 5> pruebalista{"pruebaB"};
-	pruebalista.push_back(1);
-	pruebalista.push_back(2);
-	pruebalista.push_back(3);
-	pruebalista.push_back(4);
-	pruebalista.push_back(5);
-	pruebalista.push_back(6);
-	pruebalista.push_back(7);
-	pruebalista.push_back(8);
-	pruebalista.push_back(9);
-	pruebalista.push_back(10);
-	pruebalista.print();
-	pruebalista.push_front(0);
-	pruebalista.print();
-	pruebalista.push_front(100);
-	pruebalista.print();
-	pruebalista.push_front(101);
-	pruebalista.print();
-	pruebalista.push_front(102);
-	pruebalista.print();
-	//int x;
-	//pruebalista.get_back(x);
-	//cout << x;
-	//pruebalista.push_back(1);
-	//encabezado();
+	ListaB<int, 4> prueba{"pruebaB"};
+	prueba.push_back(1);
+	prueba.push_back(2);
+	prueba.push_back(3);
+	prueba.push_back(4);
+	prueba.push_back(5);
+	prueba.push_back(6);
+	prueba.push_back(7);
+	prueba.push_back(8);
+	prueba.print();
+	int x;
+	bool r = prueba.remove(3,x);
+	cout << "\n" << x << endl;
+	prueba.print();
+	cout << "\n\n\n";
 	system("Pause()");
 }
 
