@@ -24,6 +24,7 @@ private:
 	string nombreLista; // Nombre de la lista
 	// Métodos privados
 	// Acá se incluyen los métodos privados que se requieran.
+	void reinsertarElementos(queue<T>);
 
 public:
 	ListaB(string nombre);
@@ -46,6 +47,8 @@ public:
 template<class T, int N>
 inline ListaB<T, N>::ListaB(string nombre)
 {
+	//Constructor inicializa los data members en vacio y el nombre con el
+	//parametro recibido.
 	tam = 0;
 	nombreLista = nombre;
 	primero = NULL;
@@ -54,12 +57,17 @@ inline ListaB<T, N>::ListaB(string nombre)
 template<class T, int N>
 inline int ListaB<T, N>::len()
 {
+	//Retorna el tamaño de la lista
 	return tam;
 }
 
 template<class T, int N>
 inline void ListaB<T, N>::push_front(T x)
 {
+	//La estrategia consiste en utilizar una cola de elementos T
+	//para almecenar los elementos de los arreglos para insertarlos
+	//nuevamente en la lista posterior al push front.
+	//Se vacia la lista y se vuelve a insertar con los elementos de la cola+1
 	std::queue<T> ListaElementos;
 	ListaElementos.push(x);
 	for (int i = 1; i <= tam; i++) {
@@ -68,22 +76,18 @@ inline void ListaB<T, N>::push_front(T x)
 		ListaElementos.push(a);
 	}
 	tam = 0;
-	link p = primero;
-	while (p) {
-		link siguiente = p->siguiente;
-		delete p;
-		p = siguiente;
-	}
+	this->~ListaB();
 	primero = NULL;
-	while (!ListaElementos.empty()) {
-		this->push_back(ListaElementos.front());
-		ListaElementos.pop();
-	}
+	reinsertarElementos(ListaElementos);
 }
 
 template<class T, int N>
 inline void ListaB<T, N>::push_back(T x)
 {
+	/*La estrategia se basa en que si no existe primero se crea un nuevo nodo
+	y se le asigna en la posicion 0 el elemento y se incrementa el tamaño.
+	De lo contrario, se avanza en el nodo y se busca si el nodo esta lleno.
+	*/
 	if (!primero) {
 		primero = new Nodo();
 		primero->elemento[0] = x;
@@ -91,29 +95,32 @@ inline void ListaB<T, N>::push_back(T x)
 	}
 	else {
 		if (tam >= N) {
-			int mod = tam / N;
-			int pos = tam % N;
+			int mod = tam / N; //Nodos que tiene la lista
+			int pos = tam % N; //La posicion final del arreglo en determinado nodo
 			link p = primero;
-			while (mod > 1 && p->siguiente) {
+			while (mod > 1 && p->siguiente) { //Avanzamos entre los nodos hasta llegar al final
 				p = p->siguiente;
 				mod--;
 			}
-			if (pos != 0 && p->siguiente) {
-				p = p->siguiente;
+			if (pos != 0 && p->siguiente) { //Aun no se ha llegado al final del nodo. Se avanza
+				p = p->siguiente;			//al siguiente y se inserta. Este nodo no esta lleno.
 				p->elemento[pos] = x;
 			}
 			else {
-				if (pos != 0) {
+				if (pos != 0) { //Se ha llegado al final del Nodo y este no esta lleno.
 					p->elemento[pos] = x;
 				}
 				else {
+					//El donde se efectuara la insercion esta lleno, se crea uno nuevo y se inserta
+					//en la posicion 0.
+					p->lleno = true;
 					p->siguiente = new Nodo();
 					p = p->siguiente;
 					p->elemento[0] = x;
 				}
 			}
 		}
-		else
+		else //El elemento se insertara en el primer nodo
 		{
 			primero->elemento[tam] = x;
 		}
@@ -124,10 +131,12 @@ inline void ListaB<T, N>::push_back(T x)
 template<class T, int N>
 inline void ListaB<T, N>::insertar(T x, int pos)
 {
-	if (!primero || pos > tam) {
-		cout << "No se puede insertar. La posicion esta fuera de rango";
+	if (!primero || pos > tam) { //Si la posicion es invalida o si la lista esta vacia se hara
+								// un push_back en la lista del elemento.
+		this->push_back(x);
 	}
-	else {
+	else {//Se usara una cola como estructura de datos intermedia para almacenar los elementos
+		//existentes en la lista para posterior re insertarlos adicional al nuevo elemento
 		link p = primero;
 		queue<T> elementos;
 		int t = tam;
@@ -147,22 +156,19 @@ inline void ListaB<T, N>::insertar(T x, int pos)
 		}
 		tam = 0;
 		p = primero;
-		while (p) {
-			link siguiente = p->siguiente;
-			delete p;
-			p = siguiente;
-		}
-		primero = NULL;
-		while (!elementos.empty()) {
-			this->push_back(elementos.front());
-			elementos.pop();
-		}
+		this->~ListaB(); //Se vacia la lista
+		reinsertarElementos(elementos); //Se vuelve a llenar con elementos + 1
 	}
 }
 
 template<class T, int N>
 inline bool ListaB<T, N>::remove(int pos, T & x)
 {
+	/*Se utiliza una cola como estructuras de datos para almacenamiento temporal de los
+	elementos, se vacia la lista progresivamente hasta llegar al elemento en la posicion
+	solicitada, en este caso se omite la insercion a esta cola temporal. Posteriormente, se
+	rellena la lista con los elementos.
+	*/
 	if (!primero || pos > tam) {
 		return false;
 	}
@@ -184,30 +190,23 @@ inline bool ListaB<T, N>::remove(int pos, T & x)
 			t--;
 		}
 		tam = 0;
-		p = primero;
-		while (p) {
-			link siguiente = p->siguiente;
-			delete p;
-			p = siguiente;
-		}
-		primero = NULL;
-		while (!elementos.empty()) {
-			this->push_back(elementos.front());
-			elementos.pop();
-		}
+		this->~ListaB();
+		reinsertarElementos(elementos);
 		return true;
 	}
 }
 
-
 template<class T, int N>
 inline bool ListaB<T, N>::pop(T & x)
 {
+	/*La estrategia consiste en re insertar los elementos de la lista en una cola temporal
+	exceptuando la insercion del primer elemento. Este se guarda en la direccion de memoria
+	del parametro de la funcion*/
 	if (!primero) {
 		return false;
 	}
 	else {
-		x = primero->elemento[0];
+		x = primero->elemento[0]; //Se guarda en la direccion de la variable el primer elemento
 		queue<int> elementos;
 		for (int i = 2; i <= tam; i++) {
 			T a;
@@ -215,17 +214,8 @@ inline bool ListaB<T, N>::pop(T & x)
 			elementos.push(a);
 		}
 		tam = 0;
-		link p = primero;
-		while (p) {
-			link siguiente = p->siguiente;
-			delete p;
-			p = siguiente;
-		}
-		primero = NULL;
-		while (!elementos.empty()) {
-			this->push_back(elementos.front());
-			elementos.pop();
-		}
+		this->~ListaB();
+		reinsertarElementos(elementos);
 		return true;
 	}
 }
@@ -233,29 +223,22 @@ inline bool ListaB<T, N>::pop(T & x)
 template<class T, int N>
 inline bool ListaB<T, N>::pop_back(T & elemento)
 {
+	/*Se insertan los elementos en una cola hasta llegar al penúltimo elemento.
+	Luego, se re insertan en la lista*/
 	if (!primero) {
 		return false;
 	}
 	else {
 		queue<T>elementos;
-		for (int i = 1; i < tam; i++) {
+		for (int i = 1; i < tam; i++) { //Se recorre de inicio al final-1
 			T a;
 			this->get(i, a);
 			elementos.push(a);
 		}
-		this->get(tam, elemento);
+		this->get(tam, elemento); //Se guarda el ultimo elemento de la lista en la variable
 		tam = 0;
-		link p = primero;
-		while (p) {
-			link siguiente = p->siguiente;
-			delete p;
-			p = siguiente;
-		}
-		primero = NULL;
-		while (!elementos.empty()) {
-			this->push_back(elementos.front());
-			elementos.pop();
-		}
+		this->~ListaB(); //Se vacia la lista
+		reinsertarElementos(elementos); //Se vuelve a llenar
 		return true;
 	}
 }
@@ -270,11 +253,13 @@ inline bool ListaB<T, N>::get(int pos, T & element)
 	{
 		pos--;
 		link p = primero;
-		while (pos>=N) {
+		while (pos>=N) { //La posicion esta en algun nodo que no sea el primero.
+						//Avanzamos y decrementamos la posicion N cantidad
 			p = p->siguiente;
 			pos -= N;
 		}
-		element = p->elemento[pos];
+		element = p->elemento[pos]; //Almacenamos el elemento de la posicion en la direccion de
+									//memoria del elemento como parametro.
 		return true;
 	}
 }
@@ -282,11 +267,11 @@ inline bool ListaB<T, N>::get(int pos, T & element)
 template<class T, int N>
 inline bool ListaB<T, N>::get_front(T & element)
 {
-	if (!primero) {
+	if (!primero) { //Si no existe, no se puede retornar
 		return false;
 	}
 	else
-	{
+	{	//Se accede al primer nodo, elemento[0]
 		element = primero->elemento[0];
 		return true;
 	}
@@ -296,11 +281,12 @@ inline bool ListaB<T, N>::get_front(T & element)
 template<class T, int N>
 inline bool ListaB<T, N>::get_back(T & element)
 {
-	if (!primero) {
+	if (!primero) { //Si no hay elementos, no se puede retornar el ultimo.
 		return false;
 	}
 	else
 	{
+		//Se usa la misma estrategia del metodo get con la posicion.
 		int pos = tam;
 		link q = primero;
 		while (q->siguiente)
@@ -316,7 +302,9 @@ inline bool ListaB<T, N>::get_back(T & element)
 template<class T, int N>
 inline void ListaB<T, N>::print()
 {
-	cout << "[";
+	//Se recorrer todos los elementos de la lista nodo por nodo, al finalizar uno
+	//se cierra el parentesis y se abre otro.
+	cout <<"[";
 	if (primero) {
 		link p = primero;
 		int nodos = tam / N;
@@ -346,12 +334,24 @@ inline void ListaB<T, N>::print()
 }
 
 template<class T, int N>
-inline ListaB<T, N>::~ListaB()
+inline ListaB<T, N>::~ListaB() //Destructor
 {
 	link p;
 	while (primero) {
 		p = primero->siguiente;
 		delete primero;
 		primero = p;
+	}
+	tam = 0;
+}
+
+//Metodos Adicionales de la clase
+
+template<class T, int N>
+inline void ListaB<T, N>::reinsertarElementos(queue<T>q)
+{
+	while (!q.empty()) {
+		this->push_back(q.front());
+		q.pop();
 	}
 }
