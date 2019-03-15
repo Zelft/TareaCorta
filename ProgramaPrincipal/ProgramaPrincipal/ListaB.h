@@ -246,14 +246,14 @@ inline bool ListaB<T, N>::pop_back(T & elemento)
 template<class T, int N>
 inline bool ListaB<T, N>::get(int pos, T & element)
 {
-	if (!primero && pos>tam) {
+	if (!primero && pos>=tam) {
 		return false;
 	}
 	else
 	{
 		pos--;
 		link p = primero;
-		while (pos>=N) { //La posicion esta en algun nodo que no sea el primero.
+		while (pos>=N && p->siguiente	) { //La posicion esta en algun nodo que no sea el primero.
 						//Avanzamos y decrementamos la posicion N cantidad
 			p = p->siguiente;
 			pos -= N;
